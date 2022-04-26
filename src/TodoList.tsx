@@ -6,6 +6,7 @@ import {TaskType} from "./App"; //rsc сниппед
 type TodoListPropsType = {
     title:string
     tasks: TaskType[]
+    removeTask: Function
 }
 export const TodoList = (props: TodoListPropsType) => {
     return (
@@ -16,17 +17,16 @@ export const TodoList = (props: TodoListPropsType) => {
                     <input/>
                     <button>+</button>
                 </div>
+
                 <ul>
-                    <li><input type="checkbox" checked={props.tasks[0].isDone}/> <span>{props.tasks[0].title}</span></li>
-                    <li><input type="checkbox" checked={props.tasks[1].isDone}/> <span>{props.tasks[1].title}</span></li>
-                    <li><input type="checkbox" checked={props.tasks[2].isDone}/> <span>{props.tasks[2].title}</span></li>
+                    {props.tasks.map(t=> <li><input type="checkbox" checked={t.isDone}/><span>{t.title}</span><button onClick={props.removeTask(t.id)}>x</button></li>)}
                 </ul>
                 <div>
                     <button>All</button>
                     <button>Active</button>
                     <button>Completed</button>
                 </div>
-        </div>
+            </div>
     );
 };
 
