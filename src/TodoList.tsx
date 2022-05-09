@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {FilterValuesType, TaskType} from "./App";
 import Button from "./Buttons/Button";
 
@@ -6,20 +6,36 @@ import Button from "./Buttons/Button";
 type TodoListPropsType = {
     title: string
     tasks: TaskType[]
-    removeTask: (id: number) => void
+    removeTask: (id: string) => void
     changeFilter: (value: FilterValuesType) => void
-    addTask: (props:TaskType) => void
+    addTask:(title:string)=>void
 }
-let inputValue = React.createRef()
+
 export const TodoList = (props: TodoListPropsType) => {
+
+    let [title,setTitle] = useState<string>("")
+
+    const addTaskHandler = ()=>{
+        props.addTask(title)
+        setTitle("")
+    }
+    const onChangeInputHandler=(event:ChangeEvent<HTMLInputElement>)=>{
+        setTitle(event.currentTarget.value)
+    }
+    const onKeyPressHandler=(e:React.KeyboardEvent<HTMLInputElement>)=>{
+        if(e.key === "Enter"){
+            addTaskHandler()
+        }
+    }
+
 
     return (
 
         <div>
             <h3>{props.title}</h3>
             <div>
-                <input type="text" />
-                {/*<Button name={"add"} function={()=>{props.addTask()}}*/}
+                <input value={title} onChange={onChangeInputHandler} onKeyPress={onKeyPressHandler}/>
+                <button onClick={addTaskHandler}>+</button>
             </div>
 
             <ul>

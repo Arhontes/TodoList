@@ -1,52 +1,57 @@
 import React, {useState} from 'react';
 import './App.css';
 import {TodoList} from "./TodoList";
+import {v1} from "uuid";
 
 
 export type TaskType = {
-    id: number, title: string, isDone: boolean
+    id: string, title: string, isDone: boolean
 }
 
 export type FilterValuesType = "all"| "completed"| "active"
 
 function App() {
-
+    console.log(v1())
     let [tasks, setTasks] = useState<Array<TaskType>>([
-        {id: 1, title: "HTML", isDone: true},
-        {id: 2, title: "CSS", isDone: false},
-        {id: 3, title: "JS", isDone: false},
-        {id: 4, title: "TS", isDone: true},
+        {id: v1(), title: "HTML", isDone: true},
+        {id: v1(), title: "CSS", isDone: false},
+        {id: v1(), title: "JS", isDone: false},
+        {id: v1(), title: "TS", isDone: true},
     ]);
+
+
     let tasksForTodoList = tasks
-    let y;
     let [filter, setFilter] = useState<FilterValuesType>()
+
     if (filter === "completed") {
-        tasksForTodoList = tasks.filter((t) => t.isDone === true)
+        tasksForTodoList = tasks.filter((t) => t.isDone)
     }
     else if (filter === "active") {
-        tasksForTodoList = tasks.filter((t) => t.isDone === false)
+        tasksForTodoList = tasks.filter((t) => !t.isDone)
     }
 
     function changeFilter(value:FilterValuesType){
         setFilter(value)
     }
 
-    function removeTask(id: number) {
-        console.log(id)
+    function removeTask(id: string) {
         let filteredTasks = tasks.filter((t) => t.id !== id)
         setTasks(filteredTasks)
 
     }
-    function addTask(props:TaskType){
-        let addedTask = {
-            id: props.id,
-            title: props.title,
+    function addTask(title:string){
+        const addedTask:TaskType = {
+            id: v1(),
+            title: title,
             isDone:false
         }
-        tasksForTodoList.push(addedTask)
+
+        setTasks([addedTask, ...tasks])
     }
 
+
     return (
+
         <div className="App">
 
             <TodoList title="What to learn" tasks={tasksForTodoList} removeTask={removeTask} changeFilter={changeFilter} addTask={addTask}/>
