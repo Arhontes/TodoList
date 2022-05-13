@@ -43,12 +43,11 @@ export const TodoList = (props: TodoListPropsType) => {
             <ul>
                 {
                     props.tasks.length
-                        ?
-                        props.tasks.map(t =>
+                        ? props.tasks.map(t =>
                             <li>
-                            <input type="checkbox" checked={t.isDone}/>
-                            <span>{t.title}</span>
-                            <Button name={"remove"} callback={() => props.removeTask(t.id)}/>
+                                <input type="checkbox" checked={t.isDone} />
+                                <span>{t.title}</span>
+                                <Button name={"remove"} callback={() => props.removeTask(t.id)}/>
                             </li>)
                         : <div> All is done</div>
                 }
