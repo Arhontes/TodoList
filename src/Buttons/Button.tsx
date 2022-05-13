@@ -2,13 +2,13 @@ import React from 'react';
 
 export type ButtonType = {
     name: string,
-    function: () => void
+    callback: () => void
 
 }
 const Button = (props:ButtonType) => {
 
     return (
-       <button onClick={props.function}>{props.name}</button>
+       <button onClick={props.callback}>{props.name}</button>
     )
 }
 
