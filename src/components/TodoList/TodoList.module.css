@@ -1,0 +1,11 @@
+.isDone{
+    font-weight: bold;
+    opacity: 0.2;
+}
+.error{
+    color: red;
+    font-weight: bold;
+}
+.inputError{
+    border: solid 1px red;
+}
