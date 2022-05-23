@@ -3,7 +3,8 @@ import {FilterValuesType, TaskType} from "../../App";
 import UniButton from "../Buttons/UniButton";
 import s from './TodoList.module.css'
 import TodoListTitle from "../Title/TodoListTitle";
-import UnTextInput from "../UniTextInput/UnTextInput";
+import UniTextInput from "../UniTextInput/UniTextInput";
+import UniCheckBox from "../UniCheckbox/UniCheckBox";
 
 type TodoListPropsType = {
     title: string
@@ -27,6 +28,7 @@ export const TodoList = (props: TodoListPropsType) => {
         }
         props.addTask(taskTitle)
         setTitle("")
+        props.changeFilter('all')
     }
     const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setTitle(event.currentTarget.value)
@@ -45,22 +47,21 @@ export const TodoList = (props: TodoListPropsType) => {
         ?
         props.tasks.map(t =>
             <li key={t.id}>
-
-                <input onChange={(el)=>changeTaskStatusHandler(t.id,el.currentTarget.checked)} type="checkbox" checked={t.isDone}/>
+                <UniCheckBox onChangeChecked={(checked)=>changeTaskStatusHandler(t.id,checked)} checked={t.isDone}/>
                 <span className={t.isDone ? s.isDone : ""}>{t.title}</span>
                 <UniButton  value={props.filter} children={"X"} onClick={() => props.removeTask(t.id)}/>
             </li>)
         :
-        <div> Add task</div>
+        <div> No tasks here</div>
 
     return (
 
-        <div>
+        <div className={s.todo}>
 
             <TodoListTitle title={props.title}/>
 
             <div>
-                <UnTextInput error={error} onChange={onChangeInputHandler} onEnter={addTaskHandler}/>
+                <UniTextInput value={title} error={error} onChange={onChangeInputHandler} onEnter={addTaskHandler}/>
                 <UniButton onClick={addTaskHandler}>+</UniButton>
                 {error&&<div className={s.error}>"Title is required"</div> }
             </div>

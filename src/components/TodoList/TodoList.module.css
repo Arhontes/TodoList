@@ -12,3 +12,8 @@
 .activeFilter{
     background-color: gold;
 }
+.todo{
+    background-color: darkseagreen;
+    padding: 10px;
+    border-radius: 5px;
+}

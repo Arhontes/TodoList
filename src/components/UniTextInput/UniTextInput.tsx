@@ -1,5 +1,5 @@
 import React, {ChangeEvent, DetailedHTMLProps, InputHTMLAttributes} from "react";
-import s from './UnTextInut.module.css'
+import s from './UniTextInut.module.css'
 
 type DefaultInputPropsType = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 type SuperInputTextPropsType = DefaultInputPropsType & {
@@ -9,7 +9,7 @@ type SuperInputTextPropsType = DefaultInputPropsType & {
     spanClassName?: string
 }
 
-const UnTextInput: React.FC<SuperInputTextPropsType> = (
+const UniTextInput: React.FC<SuperInputTextPropsType> = (
     {
         type,
         onChange, onChangeText,
@@ -34,17 +34,14 @@ const UnTextInput: React.FC<SuperInputTextPropsType> = (
     const finalInputClassName = className?className:`${error?s.inputError:""}`
 
     return (
-        <>
             <input
                 type={'text'}
                 onChange={onChangeCallback}
                 onKeyPress={onKeyPressCallback}
                 className={finalInputClassName}
-
                 {...restProps}
             />
-        </>
     )
 }
 
-export default UnTextInput
+export default UniTextInput
