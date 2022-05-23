@@ -1,8 +1,9 @@
 import React, {ChangeEvent, useState} from 'react';
 import {FilterValuesType, TaskType} from "../../App";
-import Button from "../../Buttons/Button";
+import UniButton from "../Buttons/UniButton";
 import s from './TodoList.module.css'
 import TodoListTitle from "../Title/TodoListTitle";
+import UnTextInput from "../UniTextInput/UnTextInput";
 
 type TodoListPropsType = {
     title: string
@@ -31,11 +32,7 @@ export const TodoList = (props: TodoListPropsType) => {
         setTitle(event.currentTarget.value)
         if(error)setError(false)
     }
-    const onKeyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            addTaskHandler()
-        }
-    }
+
     const changeFilterHandler = (value: FilterValuesType) => {
         props.changeFilter(value)
     }
@@ -48,13 +45,13 @@ export const TodoList = (props: TodoListPropsType) => {
         ?
         props.tasks.map(t =>
             <li key={t.id}>
+
                 <input onChange={(el)=>changeTaskStatusHandler(t.id,el.currentTarget.checked)} type="checkbox" checked={t.isDone}/>
                 <span className={t.isDone ? s.isDone : ""}>{t.title}</span>
-                <Button value ={props.filter} children={"X"}onClick={() => props.removeTask(t.id)}/>
-
+                <UniButton  value={props.filter} children={"X"} onClick={() => props.removeTask(t.id)}/>
             </li>)
         :
-        <div> All is done</div>
+        <div> Add task</div>
 
     return (
 
@@ -63,18 +60,22 @@ export const TodoList = (props: TodoListPropsType) => {
             <TodoListTitle title={props.title}/>
 
             <div>
-                <input className={error?s.inputError:""} value={title} onChange={onChangeInputHandler} onKeyPress={onKeyPressHandler}/>
-                <Button onClick={addTaskHandler}>+</Button>
-                {error && <div className={s.error}>Title is required</div> }
+                <UnTextInput error={error} onChange={onChangeInputHandler} onEnter={addTaskHandler}/>
+                <UniButton onClick={addTaskHandler}>+</UniButton>
+                {error&&<div className={s.error}>"Title is required"</div> }
             </div>
-
 
             <ul>{tasks}</ul>
 
             <div>
-                <Button filter={props.filter} onClick={() => changeFilterHandler('all')} children={'all'}/>
-                <Button filter={props.filter} onClick={() => changeFilterHandler("active")} children={"active"}/>
-                <Button filter={props.filter} onClick={() => changeFilterHandler('completed')} children={"completed"}/>
+                <UniButton className={props.filter==='all'?s.activeFilter:""}
+                           onClick={() => changeFilterHandler('all')} children={'all'}/>
+
+                <UniButton className={props.filter==='active'?s.activeFilter:""}
+                           onClick={() => changeFilterHandler("active")} children={"active"}/>
+
+                <UniButton className={props.filter==='completed'?s.activeFilter:""}
+                           onClick={() => changeFilterHandler('completed')} children={"completed"}/>
             </div>
         </div>
     );

@@ -9,3 +9,6 @@
 .inputError{
     border: solid 1px red;
 }
+.activeFilter{
+    background-color: gold;
+}
