@@ -6,3 +6,8 @@
 .App > div {
   margin-right: 50px;
 }
+.smartTitle{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

@@ -30,7 +30,6 @@ export const TodoList = (props: TodoListPropsType) => {
         }
         props.addTask(props.todoListID, taskTitle)
         setTitle("")
-        /*props.changeFilter(props.todoListID,'all')*/
     }
     const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setTitle(event.currentTarget.value)
@@ -41,15 +40,15 @@ export const TodoList = (props: TodoListPropsType) => {
         props.changeFilter(props.todoListID, value)
     }
 
-    const changeTaskStatusHandler = (t: string, el: boolean) => {
-        props.changeTaskStatus(props.todoListID, t, el)
-    }
+   /* const changeTaskStatusHandler = (todolistId:string,t: string, el: boolean) => {
+        props.changeTaskStatus(todolistId, t, el)
+    }*/
 
     const tasks = props.tasks.length
         ?
         props.tasks.map(t =>
             <li key={t.id}>
-                <UniCheckBox onChangeChecked={(checked) => changeTaskStatusHandler(t.id, checked)} checked={t.isDone}/>
+                <UniCheckBox onChangeChecked={(checked) => props.changeTaskStatus(props.todoListID,t.id, checked)} checked={t.isDone}/>
                 <span className={t.isDone ? s.isDone : ""}>{t.title}</span>
                 <UniButton value={props.filter} children={"X"}
                            onClick={() => props.removeTask(props.todoListID, t.id)}/>
@@ -61,9 +60,13 @@ export const TodoList = (props: TodoListPropsType) => {
 
         <div className={s.todo}>
 
-            <TodoListTitle title={props.title}/>
-            <button onClick={() => props.removeTodoList(props.todoListID)}>-</button>
-            <div>
+            <div className={s.smartTitle}>
+                <h3>{props.title}</h3>
+                <UniButton onClick={() => props.removeTodoList(props.todoListID)}>-</UniButton>
+            </div>
+
+
+            <div className={s.inputArea}>
                 <UniTextInput value={title} error={error} onChange={onChangeInputHandler} onEnter={addTaskHandler}/>
                 <UniButton onClick={addTaskHandler}>+</UniButton>
                 {error && <div className={s.error}>"Title is required"</div>}
@@ -71,15 +74,15 @@ export const TodoList = (props: TodoListPropsType) => {
 
             <ul>{tasks}</ul>
 
-            <div>
+            <div className={s.filterButtonArea}>
                 <UniButton className={props.filter === 'all' ? s.activeFilter : ""}
-                           onClick={() => changeFilterHandler('all')} children={'all'}/>
+                           onClick={() =>  props.changeFilter(props.todoListID, 'all')} children={'all'}/>
 
                 <UniButton className={props.filter === 'active' ? s.activeFilter : ""}
-                           onClick={() => changeFilterHandler("active")} children={"active"}/>
+                           onClick={() => props.changeFilter(props.todoListID, "active")} children={"active"}/>
 
                 <UniButton className={props.filter === 'completed' ? s.activeFilter : ""}
-                           onClick={() => changeFilterHandler('completed')} children={"completed"}/>
+                           onClick={() => props.changeFilter(props.todoListID, 'completed')} children={"completed"}/>
             </div>
         </div>
     )

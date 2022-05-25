@@ -7,10 +7,12 @@ type TodoListTitlePropsType = {
 
 const TodoListTitle:React.FC<TodoListTitlePropsType>=({title})=>{
     return (
-        <div>
-            <h3>{title}</h3>
+            <div>
+                <h3>{title}</h3>
+            </div>
 
-        </div>
+
+
     );
 }
 

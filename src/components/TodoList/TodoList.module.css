@@ -13,7 +13,22 @@
     background-color: gold;
 }
 .todo{
+    display: flex;
+    flex-direction: column;
     background-color: darkseagreen;
     padding: 10px;
+    border: 2px solid green;
     border-radius: 5px;
+}
+
+.smartTitle{
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+}
+.filterButtonArea{
+
+    float: bottom;
+    padding: 10px
 }
