@@ -1,4 +1,5 @@
 import React, {ChangeEvent, useState} from 'react';
+import UniTextInput from "../UniTextInput/UniTextInput";
 
 type EditableSpanPropsType={
     title:string
@@ -9,7 +10,7 @@ function EditableSpan(props:EditableSpanPropsType) {
     const[edit,setNewEdit] = useState<boolean>(false)
 
 
-    const editTrueHandler = ()=>{
+    const editHandler = ()=>{
         setNewEdit(!edit)
     }
     const onChangeHandler = (e:ChangeEvent<HTMLInputElement>)=>{
@@ -24,9 +25,9 @@ function EditableSpan(props:EditableSpanPropsType) {
     return (
             edit
             ?
-            <input onChange={onChangeHandler} onKeyPress={onEnterHandler} onBlur={editTrueHandler} autoFocus  value={newTitle}/>
+            <UniTextInput onChange={onChangeHandler} onKeyPress={onEnterHandler} onBlur={editHandler} autoFocus  value={newTitle}/>
             :
-            <span onDoubleClick={editTrueHandler}>{props.title}</span>
+            <span onDoubleClick={editHandler}>{props.title}</span>
     );
 }
 
