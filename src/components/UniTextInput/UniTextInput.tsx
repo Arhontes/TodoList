@@ -17,12 +17,11 @@ const UniTextInput: React.FC<SuperInputTextPropsType> = (
         error,
         className, spanClassName,
 
-        ...restProps// все остальные пропсы попадут в объект restProps
+        ...restProps
     }
 ) => {
     const onChangeCallback = (e: ChangeEvent<HTMLInputElement>) => {
-        onChange // если есть пропс onChange
-        && onChange(e) // то передать ему е (поскольку onChange не обязателен)
+        onChange && onChange(e)
 
         onChangeText && onChangeText(e.currentTarget.value)
     }
