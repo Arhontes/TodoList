@@ -19,19 +19,17 @@ function AddItemForm(props:AddItemPropsType) {
         props.callBack(taskTitle)
         setTitle("")
     }
-    const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setTitle(event.currentTarget.value)
+    const onChangeInputHandler = (char:string) => {
+        setTitle(char)
         if (error) setError(false)
     }
-    const onClickHandler = ()=>{
-       props.callBack(title)
-    }
+
     return (
         <div className={s.inputArea}>
 
-            <UniTextInput value={title} error={error} onChange={onChangeInputHandler} />
+            <UniTextInput onEnter={addTaskHandler} value={title} error={error} onChangeText={onChangeInputHandler} />
 
-            <UniButton onClick={onClickHandler}>+</UniButton>
+            <UniButton onClick={addTaskHandler}>+</UniButton>
             {error && <div className={s.error}>"Title is required"</div>}
         </div>
     );
