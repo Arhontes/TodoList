@@ -2,9 +2,9 @@ import React, {ChangeEvent, useState} from 'react';
 import {FilterValuesType, TaskType} from "../../App";
 import UniButton from "../UniButton/UniButton";
 import s from './TodoList.module.css'
-import TodoListTitle from "../Title/TodoListTitle";
-import UniTextInput from "../UniTextInput/UniTextInput";
 import UniCheckBox from "../UniCheckbox/UniCheckBox";
+import AddItemForm from "../AddItemForm/AddItemForm";
+import EditableSpan from "../EditableSpan/EditableSpan";
 
 type TodoListPropsType = {
     todoListID: string
@@ -16,61 +16,57 @@ type TodoListPropsType = {
     filter: FilterValuesType | undefined
     changeTaskStatus: (todoListID: string, taskID: string, isDone: boolean) => void
     removeTodoList: (todoListID: string) => void
+    editTodoListTitle:(todolistId:string, title:string)=>void
+    editTaskTitle:(todolistId:string, taskID:string,title:string)=>void
 }
 
 export const TodoList = (props: TodoListPropsType) => {
-    const [error, setError] = useState<boolean>(false)
-    const [title, setTitle] = useState<string>("")
 
-    const addTaskHandler = () => {
+
+    const addTaskHandler = (title:string) => {
         const taskTitle = title.trim()
         if (!taskTitle) {
-            setError(true)
             return
         }
         props.addTask(props.todoListID, taskTitle)
-        setTitle("")
-    }
-    const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setTitle(event.currentTarget.value)
-        if (error) setError(false)
     }
 
     const changeFilterHandler = (value: FilterValuesType) => {
         props.changeFilter(props.todoListID, value)
     }
 
-   /* const changeTaskStatusHandler = (todolistId:string,t: string, el: boolean) => {
+    const changeTaskStatusHandler = (todolistId:string,t: string, el: boolean) => {
         props.changeTaskStatus(todolistId, t, el)
-    }*/
+    }
 
+    const editTaskHandler = ( taskID:string,title:string)=>{
+        props.editTaskTitle(props.todoListID,taskID,title)
+    }
     const tasks = props.tasks.length
         ?
         props.tasks.map(t =>
             <li key={t.id}>
-                <UniCheckBox onChangeChecked={(checked) => props.changeTaskStatus(props.todoListID,t.id, checked)} checked={t.isDone}/>
-                <span className={t.isDone ? s.isDone : ""}>{t.title}</span>
+                <UniCheckBox onChangeChecked={(checked) => changeTaskStatusHandler(props.todoListID,t.id, checked)} checked={t.isDone}/>
+                <EditableSpan title={t.title} callback={(title)=>props.editTaskTitle(props.todoListID,t.id,title)}/>
+
                 <UniButton value={props.filter} children={"X"}
                            onClick={() => props.removeTask(props.todoListID, t.id)}/>
             </li>)
         :
         <div> No tasks here</div>
+    const editTodoListTitleHandler = (title:string)=>{
+        props.editTodoListTitle(props.todoListID,title)
+    }
 
     return (
-
         <div className={s.todo}>
 
             <div className={s.smartTitle}>
-                <h3>{props.title}</h3>
+                <EditableSpan callback={editTodoListTitleHandler} title={props.title} />
                 <UniButton onClick={() => props.removeTodoList(props.todoListID)}>-</UniButton>
             </div>
 
-
-            <div className={s.inputArea}>
-                <UniTextInput value={title} error={error} onChange={onChangeInputHandler} onEnter={addTaskHandler}/>
-                <UniButton onClick={addTaskHandler}>+</UniButton>
-                {error && <div className={s.error}>"Title is required"</div>}
-            </div>
+            <AddItemForm callBack={addTaskHandler}/>
 
             <ul>{tasks}</ul>
 
