@@ -1,9 +1,10 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
 import {TodoList} from "./components/TodoList/TodoList";
 import {v1} from "uuid";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
-import {TodoListsReducer} from "./components/reducers/TodoListsReducer";
+import {addTodoListAC, TodoListsReducer} from "./components/reducers/TodoListsReducer";
+import {addTaskListAC, TasksReducer} from "./components/reducers/TasksReducer";
 
 
 export type TaskType = {
@@ -25,8 +26,11 @@ function App() {
     let todolistID2 = v1();
 
 
-    let [todoLists, todoListDispatch] = useReducer(TodoListsReducer,[])
-    let [tasks, setTasks] = useState<TasksType>({
+    let [todoLists, todoListDispatch] = useReducer(TodoListsReducer, [
+        {id: todolistID1, title: 'What to learn', filter: 'all'},
+        {id: todolistID2, title: 'What to buy', filter: 'all'},
+    ])
+    let [tasks, tasksDispatch] = useReducer(TasksReducer, {
         [todolistID1]: [
             {id: v1(), title: "HTML&CSS", isDone: true},
             {id: v1(), title: "JS", isDone: true},
@@ -43,31 +47,7 @@ function App() {
         ]
     });
 
-    function changeTaskStatus(todoListID: string, taskID: string, isDone: boolean){
-        setTasks({...tasks, [todoListID]: tasks[todoListID].map(el => el.id === taskID ? {...el, isDone} : el)})
-    }
-    function removeTask(todoListID: string, taskID: string) {
 
-        setTasks({...tasks, [todoListID]: tasks[todoListID].filter(el => el.id !== taskID)})
-    }
-    function addTask(todoListID: string, title: string) {
-        let newTask = {id: v1(), title: title, isDone: true}
-        setTasks({...tasks, [todoListID]: [newTask, ...tasks[todoListID]]})
-
-    }
-    function changeFilter(todolistID: string, value: FilterValuesType) {
-        todoListDispatch(todoLists.map(el => el.id === todolistID ? {...el, filter: value} : el))
-    }
-    function removeTodoList(todoListID: string){
-        todoListDispatch(todoLists.filter(el => el.id !== todoListID))
-        delete tasks[todoListID]
-    }
-    function editTodoListTitle(todolistID: string, newTitle: string){
-        todoListDispatch(todoLists.map(t => t.id === todolistID ? {...t, title: newTitle} : t))
-    }
-    function editTask(todoListID: string, taskID: string, newTitle: string){
-        setTasks({...tasks, [todoListID]: tasks[todoListID].map(t => t.id === taskID ? {...t, title: newTitle} : t)})
-    }
     function getTasksByTodoListFilter(todoListID: string, filter: string) {
         switch (filter) {
             case "completed":
@@ -81,32 +61,37 @@ function App() {
         }
     }
 
-    const todoListArray = todoLists.length ? todoLists.map(el => {
+    const todoListArray = todoLists.length
+        ? todoLists.map(el => {
 
-        let tasksForTodoList = getTasksByTodoListFilter(el.id, el.filter);
-        return  <TodoList
-                editTaskTitle={editTask}
-                editTodoListTitle={editTodoListTitle}
+            let tasksForTodoList = getTasksByTodoListFilter(el.id, el.filter);
+            return <TodoList
+                todoListDispatch={todoListDispatch}
+                tasksDispatch={tasksDispatch}
                 todoListID={el.id}
                 key={el.id}
                 filter={el.filter}
                 title={el.title}
                 tasks={tasksForTodoList}
-                removeTask={removeTask}
-                changeFilter={changeFilter}
-                addTask={addTask}
-                changeTaskStatus={changeTaskStatus}
-                removeTodoList={removeTodoList}/> }) : <div>No TodoLists</div>
+            />
+        })
+
+        : <div>No TodoLists</div>
+
 
     const newTodoListId = v1()
 
-    function addTodoList(title: string){
-        todoListDispatch([...todoLists, {id: newTodoListId, title: title, filter: "all"}])
-        setTasks({
-            ...tasks, [newTodoListId]: [{id: v1(), title: "HTML&CSS2", isDone: true},
-                {id: v1(), title: "JS2", isDone: true},
-                {id: v1(), title: "ReactJS2", isDone: false}]
-        })
+    function addTodoList(title: string) {
+
+        todoListDispatch(addTodoListAC({id: newTodoListId, title: title, filter: "all"}))
+        tasksDispatch(addTaskListAC({
+                    [newTodoListId]: [
+                        {id: v1(), title: "HTML&CSS2", isDone: true},
+                        {id: v1(), title: "JS2", isDone: true},
+                        {id: v1(), title: "ReactJS2", isDone: false}]
+                }
+            )
+        )
     }
 
     return (
