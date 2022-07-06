@@ -42,7 +42,7 @@ export function changeTodoListFilterAC(todoListID:string, newFilter:FilterValues
 }
 
 
-export const TodoListsReducer =
+export const todoListsReducer =
     (state:Array<TodolistType>, action:TodoListsReducerActionType)=>{
     switch (action.type) {
         case "ADD-TODOLIST":

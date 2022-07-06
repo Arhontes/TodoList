@@ -15,7 +15,7 @@ import {
     addTaskAC,
     changeTaskStatusAC,
     editTaskTitleAC,
-    removeTaskAC,
+    removeTaskAC, removeTasksListAC,
     TasksReducerActionType
 } from "../reducers/TasksReducer";
 
@@ -31,6 +31,16 @@ type TodoListPropsType = {
 export const TodoList = (props: TodoListPropsType) => {
 
 
+    const changeTodoListFilterHandler = (value: FilterValuesType) => {
+        props.todoListDispatch(changeTodoListFilterAC(props.todoListID, value))
+    }
+    const editTodoListTitleHandler = (title: string) => {
+        props.todoListDispatch(editTodoListTitleAC(props.todoListID, title))
+    }
+    const removeTodoListHandler = ()=>{
+        props.todoListDispatch(removeTodoListAC(props.todoListID))
+        props.tasksDispatch(removeTasksListAC(props.todoListID))
+    }
     const addTaskHandler = (title: string) => {
         const taskTitle = title.trim()
         if (!taskTitle) {
@@ -38,26 +48,16 @@ export const TodoList = (props: TodoListPropsType) => {
         }
         props.tasksDispatch(addTaskAC(props.todoListID, taskTitle))
     }
-    const removeTaskHandler = (taskID:string)=>{
-        props.tasksDispatch(removeTaskAC(props.todoListID,taskID))
-    }
-    const changeFilterHandler = (value: FilterValuesType) => {
-        props.todoListDispatch(changeTodoListFilterAC(props.todoListID, value))
+    const editTaskTitleHandler = (taskID: string, title: string) => {
+        props.tasksDispatch(editTaskTitleAC(props.todoListID, taskID, title))
     }
     const changeTaskStatusHandler = (todolistId: string, t: string, el: boolean) => {
         props.tasksDispatch(changeTaskStatusAC(todolistId, t, el))
     }
-
-    const editTaskTitleHandler = (taskID: string, title: string) => {
-        props.tasksDispatch(editTaskTitleAC(props.todoListID, taskID, title))
+    const removeTaskHandler = (taskID:string)=>{
+        props.tasksDispatch(removeTaskAC(props.todoListID,taskID))
     }
 
-    const editTodoListTitleHandler = (title: string) => {
-        props.todoListDispatch(editTodoListTitleAC(props.todoListID, title))
-    }
-    const removeTodoListHandler = ()=>{
-        props.todoListDispatch(removeTodoListAC(props.todoListID))
-    }
     const tasks = props.tasks.length
         ? props.tasks.map(t =>
             <li key={t.id}>
@@ -84,13 +84,13 @@ export const TodoList = (props: TodoListPropsType) => {
 
             <div className={s.filterButtonArea}>
                 <UniButton className={props.filter === 'all' ? s.activeFilter : ""}
-                           onClick={()=>changeFilterHandler( 'all')} children={'all'}/>
+                           onClick={()=>changeTodoListFilterHandler( 'all')} children={'all'}/>
 
                 <UniButton className={props.filter === 'active' ? s.activeFilter : ""}
-                           onClick={()=>changeFilterHandler( "active")} children={"active"}/>
+                           onClick={()=>changeTodoListFilterHandler( "active")} children={"active"}/>
 
                 <UniButton className={props.filter === 'completed' ? s.activeFilter : ""}
-                           onClick={()=>changeFilterHandler( 'completed')} children={"completed"}/>
+                           onClick={()=>changeTodoListFilterHandler( 'completed')} children={"completed"}/>
             </div>
         </div>
     )

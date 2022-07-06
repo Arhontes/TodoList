@@ -1,5 +1,6 @@
 import {TasksType} from "../../App";
 import {v1} from "uuid";
+import {removeTodoListAC} from "./TodoListsReducer";
 
 export function addTaskAC(todoListID: string, title: string){
     return{
@@ -12,7 +13,7 @@ export function addTaskAC(todoListID: string, title: string){
 }
 export function editTaskTitleAC(todoListID: string, taskID: string, newTitle: string){
     return{
-        type:"EDIT-TASK",
+        type:"EDIT-TASK-TITLE",
         payload:{
             todoListID,
             taskID,
@@ -52,31 +53,39 @@ export function addTaskListAC(newTaskList:TasksType){
     return{
        type:"ADD-TASK-LIST",
         payload:{
-           newTaskList
+           newTasksList: newTaskList
+        }
+    }as const
+
+}
+export function removeTasksListAC(todolistID:string){
+    return{
+        type:"REMOVE-TASKS-LIST",
+        payload:{
+            todolistID
         }
     }as const
 
 }
 
-
-export type TasksReducerActionType=
+export type TasksReducerActionType =
     ReturnType<typeof addTaskAC>|
     ReturnType<typeof editTaskTitleAC>|
     ReturnType<typeof getTasksByTodoListFilterAC>|
     ReturnType<typeof removeTaskAC>|
     ReturnType<typeof changeTaskStatusAC>|
-    ReturnType<typeof addTaskListAC>
+    ReturnType<typeof addTaskListAC>|
+    ReturnType<typeof removeTasksListAC>
 
 
 
-
-export const TasksReducer =
+export const tasksReducer =
     (state:TasksType, action:TasksReducerActionType)=>{
         switch (action.type) {
             case "ADD-TASK" :
-                const newTask = {id: v1(), title: action.payload.title, isDone: true}
+                const newTask = {id: v1(), title: action.payload.title, isDone: false}
                 return {...state, [action.payload.todoListID]: [newTask, ...state[action.payload.todoListID]]}
-            case "EDIT-TASK" :
+            case "EDIT-TASK-TITLE" :
                 return {...state,
                     [action.payload.todoListID]: state[action.payload.todoListID]
                         .map(t => t.id === action.payload.taskID
@@ -93,7 +102,11 @@ export const TasksReducer =
                             ? {...el,isDone:action.payload.isDone}
                             : el)}
             case "ADD-TASK-LIST":
-                return { ...state,...action.payload.newTaskList}
+                return { ...state,...action.payload.newTasksList}
+            case "REMOVE-TASKS-LIST":
+                const newState = {...state}
+                delete newState[action.payload.todolistID]
+                return newState
             default:
                 return state
         }

@@ -20,7 +20,7 @@ export type TasksType = {
     [key: string]: Array<TaskType>
 }
 
-function App() {
+export function AppWithRedux() {
 
     let todolistID1 = v1();
     let todolistID2 = v1();
@@ -50,13 +50,14 @@ function App() {
             case "completed":
                 return tasks[todoListID].filter((t) => t.isDone)
             case "active":
-                return tasks[todoListID].filter((t) => ! t.isDone)
+                return tasks[todoListID].filter((t) => !t.isDone)
             case "all":
                 return [...tasks[todoListID]]
             default:
                 return [...tasks[todoListID]]
         }
     }
+
     const todoListArray = todoLists.length
         ? todoLists.map(el => {
 
@@ -78,6 +79,7 @@ function App() {
     const newTodoListId = v1()
 
     function addTodoList(title: string) {
+
         todoListDispatch(addTodoListAC({id: newTodoListId, title: title, filter: "all"}))
         tasksDispatch(addTaskListAC({
                     [newTodoListId]: [
@@ -98,5 +100,3 @@ function App() {
         </div>
     );
 }
-
-export default App;
