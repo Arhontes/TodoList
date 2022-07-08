@@ -1,7 +1,11 @@
-import {TasksType} from "../../App";
 import {v1} from "uuid";
-import {removeTodoListAC} from "./TodoListsReducer";
-
+import {addTodoListAC, removeTodoListAC} from "./TodoListsReducer";
+export type TaskType = {
+    id: string, title: string, isDone: boolean
+}
+export type TasksType = {
+    [key: string]: Array<TaskType>
+}
 export function addTaskAC(todoListID: string, title: string){
     return{
         type:"ADD-TASK",
@@ -30,6 +34,7 @@ export function getTasksByTodoListFilterAC(todoListID: string, filter: string){
         }
     }as const
 }
+//
 export function removeTaskAC(todoListID: string, taskID: string){
     return{
         type:"REMOVE-TASK",
@@ -49,20 +54,11 @@ export function changeTaskStatusAC(todoListID: string, taskID: string, isDone: b
         }
     }as const
 }
-export function addTaskListAC(newTaskList:TasksType){
+export function removeTasksListAC(todoListID:string){
     return{
-       type:"ADD-TASK-LIST",
+        type:"REMOVE-TODOLIST",
         payload:{
-           newTasksList: newTaskList
-        }
-    }as const
-
-}
-export function removeTasksListAC(todolistID:string){
-    return{
-        type:"REMOVE-TASKS-LIST",
-        payload:{
-            todolistID
+            todoListID
         }
     }as const
 
@@ -74,13 +70,13 @@ export type TasksReducerActionType =
     ReturnType<typeof getTasksByTodoListFilterAC>|
     ReturnType<typeof removeTaskAC>|
     ReturnType<typeof changeTaskStatusAC>|
-    ReturnType<typeof addTaskListAC>|
-    ReturnType<typeof removeTasksListAC>
+    ReturnType<typeof addTodoListAC>|
+    ReturnType<typeof removeTodoListAC>
 
 
-
+const initialState:TasksType= {}
 export const tasksReducer =
-    (state:TasksType, action:TasksReducerActionType)=>{
+    (state=initialState, action:TasksReducerActionType):TasksType=>{
         switch (action.type) {
             case "ADD-TASK" :
                 const newTask = {id: v1(), title: action.payload.title, isDone: false}
@@ -101,11 +97,11 @@ export const tasksReducer =
                         .map(el => el.id === action.payload.taskID
                             ? {...el,isDone:action.payload.isDone}
                             : el)}
-            case "ADD-TASK-LIST":
-                return { ...state,...action.payload.newTasksList}
-            case "REMOVE-TASKS-LIST":
+            case "ADD-TODOLIST":
+                return { ...state,[action.payload.newTodoList.id]:[]}
+            case "REMOVE-TODOLIST":
                 const newState = {...state}
-                delete newState[action.payload.todolistID]
+                delete newState[action.payload.todoListID]
                 return newState
             default:
                 return state
