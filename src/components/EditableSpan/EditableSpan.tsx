@@ -1,11 +1,12 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, memo, useState} from 'react';
 import UniTextInput from "../UniTextInput/UniTextInput";
 
 type EditableSpanPropsType={
     title:string
     callback:(title:string)=>void
 }
-function EditableSpan(props:EditableSpanPropsType) {
+const EditableSpan = memo((props:EditableSpanPropsType)=> {
+    console.log("EditableSpan")
     const[newTitle, setNewTitle] = useState(props.title)
     const[edit,setNewEdit] = useState<boolean>(false)
 
@@ -22,13 +23,16 @@ function EditableSpan(props:EditableSpanPropsType) {
             setNewEdit(false)
         }
     }
+    const onBlurHandler =()=>{
+        setNewEdit(!edit)
+        setNewTitle(props.title)
+    }
     return (
             edit
             ?
-            <UniTextInput onChange={onChangeHandler} onKeyPress={onEnterHandler} onBlur={editHandler} autoFocus  value={newTitle}/>
+            <UniTextInput onChange={onChangeHandler} onKeyPress={onEnterHandler} onBlur={onBlurHandler} autoFocus  value={newTitle}/>
             :
             <span onDoubleClick={editHandler}>{props.title}</span>
     );
-}
-
-export default EditableSpan;
+})
+export default EditableSpan
