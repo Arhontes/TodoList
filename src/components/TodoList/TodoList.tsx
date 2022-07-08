@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import UniButton from "../UniButton/UniButton";
 import s from './TodoList.module.css'
 import UniCheckBox from "../UniCheckbox/UniCheckBox";
-import AddItemForm from "../AddItemForm/AddItemForm";
+import {AddItemForm} from "../AddItemForm/AddItemForm";
 import EditableSpan from "../EditableSpan/EditableSpan";
 import {TasksType} from "../../AppWithRedux";
 import {FilterValuesType} from "../reducers/TodoListsReducer";
@@ -23,23 +23,20 @@ type TodoListPropsType = {
 }
 
 export const TodoList = (props: TodoListPropsType) => {
-
+    console.log("TodoList")
     function getTasksByTodoListFilter(): Array<TaskType> {
-        let filteredTasks
         switch (props.filter) {
             case "completed":
-                filteredTasks = props.tasks[props.todoListID].filter((t) => t.isDone)
+                return  props.tasks[props.todoListID].filter((t) => t.isDone)
             case "active":
-                filteredTasks=  props.tasks[props.todoListID].filter((t) => !t.isDone)
+                return props.tasks[props.todoListID].filter((t) => !t.isDone)
             case "all":
-                filteredTasks= [...props.tasks[props.todoListID]]
+                return [...props.tasks[props.todoListID]]
             default:
-                filteredTasks= [...props.tasks[props.todoListID]]
+                return [...props.tasks[props.todoListID]]
         }
-        return filteredTasks
     }
     const filteredTasks = getTasksByTodoListFilter()
-
 
     const tasks = filteredTasks.length ? filteredTasks.map(t =>
             <li key={t.id}>
@@ -52,6 +49,7 @@ export const TodoList = (props: TodoListPropsType) => {
             </li>)
 
         : <div> No tasks here</div>
+    const addTask = useCallback((title) => props.addTask(props.todoListID, title),[])
     return (
         <div className={s.todo}>
 
@@ -61,7 +59,7 @@ export const TodoList = (props: TodoListPropsType) => {
                 <UniButton onClick={() => props.removeTodoList(props.todoListID)}>-</UniButton>
             </div>
 
-            <AddItemForm callBack={(title) => props.addTask(props.todoListID, title)}/>
+            <AddItemForm addItem={addTask}/>
 
             <ul>{tasks}</ul>
 

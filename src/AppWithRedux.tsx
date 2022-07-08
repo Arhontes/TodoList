@@ -1,7 +1,7 @@
-import React, {useReducer} from 'react';
+import React, {memo, useCallback} from 'react';
 import './App.css';
 import {TodoList} from "./components/TodoList/TodoList";
-import AddItemForm from "./components/AddItemForm/AddItemForm";
+import {AddItemForm} from "./components/AddItemForm/AddItemForm";
 import {
     addTodoListAC,
     changeTodoListFilterAC,
@@ -33,24 +33,11 @@ export type TasksType = {
 }
 
 export function AppWithRedux() {
-
+    console.log("AppWithRedux")
     const todoLists = useSelector<AppRootStateType, TodolistType[]>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksType>(state => state.tasks)
     const dispatch = useDispatch()
 
-
-    const getTasksByTodoListFilter = (todoListID: string, filter: string) => {
-        switch (filter) {
-            case "completed":
-                return tasks[todoListID].filter((t) => t.isDone)
-            case "active":
-                return tasks[todoListID].filter((t) => !t.isDone)
-            case "all":
-                return [...tasks[todoListID]]
-            default:
-                return [...tasks[todoListID]]
-        }
-    }
     const changeTodoListFilterHandler = (todoListID: string, value: FilterValuesType) => {
         dispatch(changeTodoListFilterAC(todoListID, value))
     }
@@ -77,11 +64,15 @@ export function AppWithRedux() {
     const removeTaskHandler = (todoListID: string, taskID: string) => {
         dispatch(removeTaskAC(todoListID, taskID))
     }
+
+    const addItem = useCallback((title: string) => {
+        dispatch(addTodoListAC(title))
+
+    }, [dispatch])
+
     const todoListArray = todoLists.length
         ? todoLists.map(el => {
-
-
-            return <TodoList
+            return <TodoListReactMemoContainer
                 changeTodoListFilter={changeTodoListFilterHandler}
                 addTask={addTaskHandler}
                 changeTaskStatus={changeTaskStatusHandler}
@@ -96,20 +87,14 @@ export function AppWithRedux() {
                 tasks={tasks}
             />
         })
-
         : <div>No TodoLists</div>
-
-
-    function addTodoList(title: string) {
-        dispatch(addTodoListAC(title))
-    }
 
     return (
         <div className="App">
-            {
-                todoListArray
-            }
-            <AddItemForm callBack={addTodoList}/>
+            {todoListArray}
+            <AddItemForm addItem={addItem}/>
         </div>
     );
 }
+
+export const TodoListReactMemoContainer = memo(TodoList)
