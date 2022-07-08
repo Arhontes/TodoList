@@ -1,10 +1,9 @@
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {memo, useCallback} from 'react';
 import UniButton from "../UniButton/UniButton";
 import s from './TodoList.module.css'
 import UniCheckBox from "../UniCheckbox/UniCheckBox";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import EditableSpan from "../EditableSpan/EditableSpan";
-import {TasksType} from "../../AppWithRedux";
 import {FilterValuesType} from "../reducers/TodoListsReducer";
 import {TaskType} from "../reducers/TasksReducer";
 
@@ -37,7 +36,8 @@ export const TodoList = memo((props: TodoListPropsType) => {
         }
     }
     const filteredTasks = getTasksByTodoListFilter()
-
+    const addTask = useCallback((title) => props.addTask(props.todoListID, title),[props.addTask,props.todoListID])
+    const editTodoListTitle = useCallback((title) => props.editTodoListTitle(props.todoListID, title),[props.editTodoListTitle,props.todoListID])
     const tasks = filteredTasks.length ? filteredTasks.map(t =>
             <li key={t.id}>
                 <UniCheckBox onChangeChecked={(checked) => props.changeTaskStatus(props.todoListID, t.id, checked)}
@@ -49,12 +49,12 @@ export const TodoList = memo((props: TodoListPropsType) => {
             </li>)
 
         : <div> No tasks here</div>
-    const addTask = useCallback((title) => props.addTask(props.todoListID, title),[props.addTask,props.todoListID])
+
     return (
         <div className={s.todo}>
 
             <div className={s.smartTitle}>
-                <EditableSpan callback={(title) => props.editTodoListTitle(props.todoListID, title)}
+                <EditableSpan callback={editTodoListTitle}
                               title={props.title}/>
                 <UniButton onClick={() => props.removeTodoList(props.todoListID)}>-</UniButton>
             </div>

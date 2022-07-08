@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, { useCallback} from 'react';
 import './App.css';
 import {TodoList} from "./components/TodoList/TodoList";
 import {AddItemForm} from "./components/AddItemForm/AddItemForm";
@@ -17,7 +17,7 @@ import {
 } from "./components/reducers/TasksReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./Store/store";
-import {log} from "util";
+
 
 
 export type TaskType = {
