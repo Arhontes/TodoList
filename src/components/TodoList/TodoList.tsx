@@ -1,11 +1,11 @@
 import React, {memo, useCallback} from 'react';
 import UniButton from "../UniButton/UniButton";
 import s from './TodoList.module.css'
-import UniCheckBox from "../UniCheckbox/UniCheckBox";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import EditableSpan from "../EditableSpan/EditableSpan";
 import {FilterValuesType} from "../reducers/TodoListsReducer";
 import {TaskType} from "../reducers/TasksReducer";
+import {Task} from "../Task/Task";
 
 type TodoListPropsType = {
     todoListID: string
@@ -23,10 +23,11 @@ type TodoListPropsType = {
 
 export const TodoList = memo((props: TodoListPropsType) => {
     console.log("TodoList")
+
     function getTasksByTodoListFilter(): Array<TaskType> {
         switch (props.filter) {
             case "completed":
-                return  props.tasks.filter((t) => t.isDone)
+                return props.tasks.filter((t) => t.isDone)
             case "active":
                 return props.tasks.filter((t) => !t.isDone)
             case "all":
@@ -35,19 +36,19 @@ export const TodoList = memo((props: TodoListPropsType) => {
                 return [...props.tasks]
         }
     }
+
     const filteredTasks = getTasksByTodoListFilter()
-    const addTask = useCallback((title) => props.addTask(props.todoListID, title),[props.addTask,props.todoListID])
-    const editTodoListTitle = useCallback((title) => props.editTodoListTitle(props.todoListID, title),[props.editTodoListTitle,props.todoListID])
+    const addTask = useCallback((title) => props.addTask(props.todoListID, title), [props.addTask, props.todoListID])
+    const editTodoListTitle = useCallback((title) => props.editTodoListTitle(props.todoListID, title), [props.editTodoListTitle, props.todoListID])
+
     const tasks = filteredTasks.length ? filteredTasks.map(t =>
-            <li key={t.id}>
-                <UniCheckBox onChangeChecked={(checked) => props.changeTaskStatus(props.todoListID, t.id, checked)}
-                             checked={t.isDone}/>
-                <EditableSpan title={t.title} callback={(title) => props.editTaskTitle(props.todoListID, t.id, title)}/>
-
-                <UniButton value={props.filter} children={"X"}
-                           onClick={() => props.removeTask(props.todoListID, t.id)}/>
-            </li>)
-
+            <Task editTaskTitle={props.editTaskTitle}
+                  title={t.title} id={t.id}
+                  filter={props.filter}
+                  isDone={t.isDone}
+                  removeTask={props.removeTask}
+                  changeTaskStatus={props.changeTaskStatus}
+                  todoListID={props.todoListID}/>)
         : <div> No tasks here</div>
 
     return (
@@ -78,4 +79,6 @@ export const TodoList = memo((props: TodoListPropsType) => {
     )
 
 })
+
+
 
