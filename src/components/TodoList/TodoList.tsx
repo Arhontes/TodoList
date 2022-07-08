@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import UniButton from "../UniButton/UniButton";
 import s from './TodoList.module.css'
 import UniCheckBox from "../UniCheckbox/UniCheckBox";
@@ -11,7 +11,7 @@ import {TaskType} from "../reducers/TasksReducer";
 type TodoListPropsType = {
     todoListID: string
     title: string
-    tasks: TasksType
+    tasks: TaskType[]
     filter: FilterValuesType | undefined
     addTask: (todoListID: string, title: string) => void
     changeTaskStatus: (todolistId: string, t: string, el: boolean) => void
@@ -22,18 +22,18 @@ type TodoListPropsType = {
     changeTodoListFilter: (todoListID: string, value: FilterValuesType) => void
 }
 
-export const TodoList = (props: TodoListPropsType) => {
+export const TodoList = memo((props: TodoListPropsType) => {
     console.log("TodoList")
     function getTasksByTodoListFilter(): Array<TaskType> {
         switch (props.filter) {
             case "completed":
-                return  props.tasks[props.todoListID].filter((t) => t.isDone)
+                return  props.tasks.filter((t) => t.isDone)
             case "active":
-                return props.tasks[props.todoListID].filter((t) => !t.isDone)
+                return props.tasks.filter((t) => !t.isDone)
             case "all":
-                return [...props.tasks[props.todoListID]]
+                return [...props.tasks]
             default:
-                return [...props.tasks[props.todoListID]]
+                return [...props.tasks]
         }
     }
     const filteredTasks = getTasksByTodoListFilter()
@@ -49,7 +49,7 @@ export const TodoList = (props: TodoListPropsType) => {
             </li>)
 
         : <div> No tasks here</div>
-    const addTask = useCallback((title) => props.addTask(props.todoListID, title),[])
+    const addTask = useCallback((title) => props.addTask(props.todoListID, title),[props.addTask,props.todoListID])
     return (
         <div className={s.todo}>
 
@@ -77,5 +77,5 @@ export const TodoList = (props: TodoListPropsType) => {
         </div>
     )
 
-}
+})
 
