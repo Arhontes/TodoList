@@ -5,10 +5,8 @@ import {
     editTaskTitleAC,
     removeTaskAC,
     removeTasksListAC,
-    tasksReducer
+    tasksReducer, TasksType
 } from "./TasksReducer";
-import {TasksType, TaskType} from "../../App";
-import {removeTodoListAC} from "./TodoListsReducer";
 
 let todolistID1 = v1();
 let todolistID2 = v1();
