@@ -4,7 +4,7 @@ import {todoListsReducer} from "../components/reducers/TodoListsReducer";
 
 const rootReducer = combineReducers({
     tasks:tasksReducer,
-    todolist:todoListsReducer,
+    todolists:todoListsReducer,
 })
 
 export const store = legacy_createStore(rootReducer)
