@@ -1,6 +1,6 @@
 import React, {ButtonHTMLAttributes, MouseEvent, DetailedHTMLProps} from 'react';
-import {FilterValuesType} from "../../App";
 import s from './UnButton.module.css'
+import {FilterValuesType} from "../reducers/TodoListsReducer";
 
 type DefaultButtonPropsType = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 
